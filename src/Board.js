@@ -79,12 +79,38 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      //get the row at the input rowIndex
+      var currentRow = this.get(rowIndex);
+      //reduce the array to its sum
+      var currentRowSum = currentRow.reduce(function(sum, chessSquare){
+        return sum + chessSquare;
+      }, 0);
+      //if the sum is greater than 1
+      if (currentRowSum > 1) {
+        //return true
+        return true;
+      } else {
+        //else return false
+        return false;
+      };
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
       return false; // fixme
+      //checkin if any of the rows in the board have conflicts
+      //inputs - nothing
+      //outputs - boolean
+      //side effects - hopefully none!
+      //constraints - linear
+      //edge cases -
+      //explanation - we will check each row of the board and if any of their sums are greaterthan one return true othwerise false
+
+      //for var i row in the board
+        //if we call the has row conflict function on current row
+          //if true return out early of the loop and return true;
+        //return false
+
     },
 
 
