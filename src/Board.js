@@ -82,7 +82,7 @@
       //get the row at the input rowIndex
       var currentRow = this.get(rowIndex);
       //reduce the array to its sum
-      var currentRowSum = currentRow.reduce(function(sum, chessSquare){
+      var currentRowSum = currentRow.reduce(function(sum, chessSquare) {
         return sum + chessSquare;
       }, 0);
       //if the sum is greater than 1
@@ -92,7 +92,7 @@
       } else {
         //else return false
         return false;
-      };
+      }
     },
 
     // test if any rows on this board contain conflicts

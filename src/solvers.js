@@ -17,7 +17,7 @@
 
 window.findNRooksSolution = function(n) {
   var solution = undefined; //fixme
-  var testBoard = new Board({n:10});
+  var testBoard = new Board({n: 10});
   // var A = testBoard.get(0);
   // A[0] = 1;
   // testBoard.set(0, A);
