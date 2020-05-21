@@ -24,11 +24,11 @@
 //exp: use n to instantiate a board - modify that board and test to find a working solution, if a solution - meaning all rooks have been placed with no conflicts - return the modified board
 
 window.findNRooksSolution = function(n) {
-  let solution = new Board({n: n}); //Bug here: solution should be a matrix, not a board instance!
+  let solution = new Board({n: n});
   //set up a out of bounds storage object or array
   let outOfBoundsCol = [];
   //set up a storage for inbounds columns as an array of valid column indices (1 to n-1)
-  let inBoundsCol = _.range(1, solution.get('n') - 1);
+  let inBoundsCol = _.range(1, solution.get('n'));
   //place a rook at row zero column 0;
   solution.togglePiece(0, 0);
   //get grid with this rows method
@@ -52,9 +52,8 @@ window.findNRooksSolution = function(n) {
     //update out of bounds storage with current column index
     outOfBoundsCol.push(minInboundsIndex);
   }
-  console.log(solution);
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution.rows()));
+  return solution.rows();
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
