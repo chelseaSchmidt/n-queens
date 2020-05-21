@@ -153,22 +153,63 @@
       return false;
     },
 
-
-
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+    // J : Checking to see if there is there are any conflicts (sum of diagonal is greater than 1) at passed in given column index of passed in first row. Sum of diagonal: value at row 1 at given index; value at starting row + 1 at given index; etc. through column index n - 1
+    // I : number value corresponding to a column index at a given row
+    // O : boolean
+    // C : same as others
+    // E : within bounds 0 - n;
+    // E : sum up the values starting at row 1 at given column index; each subsequent row at given index + 1; continue to end of columns. If sum greater than 1, return true
+    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow, rowIndex = 0) {
+      //make sum variable
+      let sum = 0;
+      //set necessary distance to n - long variable
+      let endRow = this.get('n') - 1 - majorDiagonalColumnIndexAtFirstRow;
+      //get grid
+      let grid = this.rows();
+      //for each row of grid, until we hit necessary distance... (i is row position, col position is long variable)
+      while (rowIndex <= endRow) {
+        //add the value at given column index to sum
+        sum += grid[rowIndex][majorDiagonalColumnIndexAtFirstRow];
+        //if sum is greater than 1,
+        if (sum > 1) {
+          //return true
+          return true;
+        }
+        //increment long col variable
+        majorDiagonalColumnIndexAtFirstRow++;
+        //increment row towards end
+        rowIndex++;
+      }
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      //specification:
+      //I: nothing
+      //O: boolean
+      //C: ... linear
+      //E: same, stay within bounds or empty grid
+      //explanation: we will check the instance of the board for each row we will check each column position until the ending row. if any of the row checks return true; end the loop and return true. otherwise we get to the end and there are no conflicts.
+
+      //get grid assign variable
+      let grid = this.rows();
+      //for each row in the grid
+      for (var i = 0; i < grid.length; i++) {
+        //if the call to hasmajorconflictdiagnonalAt on current row index, 0 - is true;
+        for (var j = 0; j <grid.length; j++) {
+          if (this.hasMajorDiagonalConflictAt(j, i)) {
+            //return true;
+            return true;
+          }
+        }
+      }
       return false; // fixme
     },
-
-
 
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
