@@ -201,7 +201,7 @@
       //for each row in the grid
       for (var i = 0; i < grid.length; i++) {
         //if the call to hasmajorconflictdiagnonalAt on current row index, 0 - is true;
-        for (var j = 0; j <grid.length; j++) {
+        for (var j = 0; j < grid.length; j++) {
           if (this.hasMajorDiagonalConflictAt(j, i)) {
             //return true;
             return true;
@@ -215,13 +215,63 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+    // J: check bottom left to top right. Starting at given column, check each value at row-1,col+1; sum as we go, see if they are greater than 1.
+    // Same IOCE as major-at
+    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow, rowIndex = this.get('n')) {
+      //make sum variable
+      let sum = 0;
+      //set end distance -
+      let endRow = minorDiagonalColumnIndexAtFirstRow;
+      //start at column index 3 --> end row should also be index 3
+        //4 - 1
+      //start at column index 2 --> end row should also be index 2
+      //start at row index 1, col index 3 --> end row should be index 3
+        //4 - 1 - 3
+      //get grid
+      let grid = this.rows();
+      //for each row of grid, until we hit necessary distance... (i is row position, col position is long variable)
+      while (rowIndex <= endRow) {
+        //add the value at given column index to sum
+        sum += grid[rowIndex][minorDiagonalColumnIndexAtFirstRow];
+        //if sum is greater than 1,
+        if (sum > 1) {
+          //return true
+          return true;
+        }
+        //increment long col variable
+        minorDiagonalColumnIndexAtFirstRow--;
+        //increment row towards end
+        rowIndex++;
+      }
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      //for each column index of the first row, call hasMinorAt
+      //for each subsequent row, call hasMinorAt at last column index and new row index
+
+      //get grid
+      let grid = this.rows();
+      //for each column index in row 1...
+      for (let col = 0; col < grid[0].length; col++) {
+        //if call to hasMinorAt on current column index and row index 1 returns true,
+        if (this.hasMinorDiagonalConflictAt(col, 0)) {
+          //return true
+          return true;
+        }
+      }
+
+      //for each row in the grid...
+      for (let row = 1; row < grid.length; row++) {
+        //if call to hasMinorAt on column index of n-1 and current row returns true,
+        if (this.hasMinorDiagonalConflictAt(this.get('n') - 1, row)) {
+          //return true
+          return true;
+        }
+      }
+
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
