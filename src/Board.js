@@ -97,20 +97,19 @@
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
-      //checkin if any of the rows in the board have conflicts
-      //inputs - nothing
-      //outputs - boolean
-      //side effects - hopefully none!
-      //constraints - linear
-      //edge cases -
-      //explanation - we will check each row of the board and if any of their sums are greaterthan one return true othwerise false
-
+      //make grid  variable
+      var grid = this.rows();
       //for var i row in the board
+      for (var i = 0; i < grid.length; i++) {
+        var row = grid[i];
         //if we call the has row conflict function on current row
+        if (this.hasRowConflictAt(i)) {
           //if true return out early of the loop and return true;
-        //return false
-
+          return true;
+        }
+      }
+      //return false
+      return false;
     },
 
 
