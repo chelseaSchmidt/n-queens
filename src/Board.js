@@ -119,12 +119,38 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      //get entire grid from this instance
+      let grid = this.rows();
+      //declare sum variable
+      let sum = 0;
+      //for each inner array of this grid...
+      for (let row of grid) {
+        //add the current row at column index value to sum
+        sum += row[colIndex];
+        //if sum variable is greater than 1
+        if (sum > 1) {
+          //return true
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      //create a column counter variable
+      let colIndex = 0;
+      //while counter is less than n...
+      while (colIndex < this.get('n')) {
+        //if invocation of hasColConflictAt on this instance, passing in counter index, returns true
+        if (this.hasColConflictAt(colIndex)) {
+          //return true
+          return true;
+        }
+        //increment counter
+        colIndex++;
+      }
+      return false;
     },
 
 
