@@ -64,8 +64,31 @@ window.findNRooksSolution = function(n) {
 // E: n is 0; junk characters
 // E: For each position of the first piece in the first row, implement search; at some point hit base case where we run out of row positions; return the number of solutions found up through that point. Base case is after exhausting all possible permutations and have one chess square left to place a piece
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  //set up variables for closure function to access
+  var solutionCount = 0;
+  let validColumns = _.range(0, n);
+  let board = new Board({'n': n});
 
+  //call function to mutate solutionCount
+  findSolutions(0, validColumns);
+
+  //definition of recursive function that will mutate solutionCount
+  function findSolutions(rowIndex, validCols) {
+    if (rowIndex === n) {
+      return 1;
+    }
+    if (validCols.length === 0) {
+      return 0;
+    }
+    validColumns.forEach(function(colIndex, i, collection) {
+      board.togglePiece(rowIndex, colIndex);
+      let invalidIndex = collection.indexOf(colIndex);
+      validCols.splice(invalidIndex, 1); //mutates original array, deletes used up value
+      solutionCount += findSolutions(rowIndex + 1, validCols);
+    });
+  }
+
+  //once recursive calls complete, return overall solutionCount
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
