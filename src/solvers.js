@@ -57,6 +57,12 @@ window.findNRooksSolution = function(n) {
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
+// J: For each available position of a rook in the first row, check all available rook positions in the subsequent rows, such that n rooks are placed on the board without conflicting
+// I: n --> determining nxn board and n rooks
+// O: number --> number of solutions
+// C: possibly quadratic...or worse...
+// E: n is 0; junk characters
+// E: For each position of the first piece in the first row, implement search; at some point hit base case where we run out of row positions; return the number of solutions found up through that point. Base case is after exhausting all possible permutations and have one chess square left to place a piece
 window.countNRooksSolutions = function(n) {
   var solutionCount = undefined; //fixme
 
