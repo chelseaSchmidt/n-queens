@@ -126,7 +126,6 @@ window.countNQueensSolutions = function(n) {
     let solutions = 0;
     if (rowIndex === n) {
       if (board.hasAnyQueensConflicts()) {
-        console.log(board.rows());
         return 0;
       } else {
         // board = new Board({'n': n});
@@ -139,7 +138,6 @@ window.countNQueensSolutions = function(n) {
 
           return 0;
         }
-        console.log(board.rows());
         return 1;
       }
     } else
@@ -148,21 +146,34 @@ window.countNQueensSolutions = function(n) {
       return 0;
     } else {
     for (let i = 0; i < validCols.length; i++) {
-      // board = new Board({'n': n});
-      if (validCols.length === n) {
-        board = new Board({n: n});
+      //reset board
+      //if there are valid columns present
+      if (validCols.length > 0) {
+        //for each cell in current row
+        let currentRow = board.get(rowIndex);
+        for (let i = 0; i < currentRow.length; i++) {
+          //if cell is 1
+          if (currentRow[i] === 1) {
+            //toggle
+            board.togglePiece(rowIndex, i);
+          }
+        }
       }
+      // for (let i = 0; i < validCols.length; i++) {
+      //   let colIndex = validCols[i];
+      //   if (board.get(rowIndex)[colIndex] === 1) {
+      //     board.togglePiece(rowIndex, i);
+      //   }
+      // }
+      //toggle pieces
       let colIndex = validCols[i];
       board.togglePiece(rowIndex, colIndex);
       let invalidIndex = validCols.indexOf(colIndex);
       let newValidCols = validCols.slice();
       newValidCols.splice(invalidIndex, 1); //mutates original array, deletes used up value
       solutions += findSolutions(rowIndex + 1, newValidCols, board);
-
-    // });
     }
     }
-    // board = new Board({'n': n});
 
     return solutions;
   }
