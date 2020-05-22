@@ -164,12 +164,18 @@
     // E : within bounds 0 - n;
     // E : sum up the values starting at row 1 at given column index; each subsequent row at given index + 1; continue to end of columns. If sum greater than 1, return true
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow, rowIndex = 0) {
+      if (majorDiagonalColumnIndexAtFirstRow < 0) {
+        return false;
+      }
       //make sum variable
       let sum = 0;
       //set necessary distance to n - long variable
       let endRow = this.get('n') - 1 - majorDiagonalColumnIndexAtFirstRow;
       //get grid
       let grid = this.rows();
+      if (grid.length === 0) {
+        return false;
+      }
       //for each row of grid, until we hit necessary distance... (i is row position, col position is long variable)
       while (rowIndex <= endRow) {
         //add the value at given column index to sum
@@ -198,6 +204,9 @@
 
       //get grid assign variable
       let grid = this.rows();
+      if (grid.length === 0) {
+        return false;
+      }
       //for each row in the grid
       for (var i = 0; i < grid.length; i++) {
         //if the call to hasmajorconflictdiagnonalAt on current row index, 0 - is true;
@@ -217,7 +226,7 @@
     // test if a specific minor diagonal on this board contains a conflict
     // J: check bottom left to top right. Starting at given column, check each value at row-1,col+1; sum as we go, see if they are greater than 1.
     // Same IOCE as major-at
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow, rowIndex = this.get('n')) {
+    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow, rowIndex = 0) {
       //make sum variable
       let sum = 0;
       //set end distance -
@@ -229,6 +238,12 @@
         //4 - 1 - 3
       //get grid
       let grid = this.rows();
+      if (grid.length < minorDiagonalColumnIndexAtFirstRow -1) {
+        return false;
+      }
+      if (grid.length === undefined) {
+        return false;
+      }
       //for each row of grid, until we hit necessary distance... (i is row position, col position is long variable)
       while (rowIndex <= endRow) {
         //add the value at given column index to sum
@@ -253,6 +268,9 @@
 
       //get grid
       let grid = this.rows();
+      if (grid.length === 0) {
+        return false;
+      }
       //for each column index in row 1...
       for (let col = 0; col < grid[0].length; col++) {
         //if call to hasMinorAt on current column index and row index 1 returns true,

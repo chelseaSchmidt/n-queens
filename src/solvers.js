@@ -67,7 +67,7 @@ window.countNRooksSolutions = function(n) {
   //set up variables for closure function to access
   var solutionCount = 0;
   let validColumns = _.range(0, n);
-  let board = new Board({'n': n});
+  var board = new Board({'n': n});
 
   //call function to mutate solutionCount
   solutionCount = findSolutions(0, validColumns);
@@ -110,7 +110,62 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  if (n === 0) {
+    return 1;
+  }
+  //set up variables for closure function to access
+  var solutionCount = 0;
+  let validColumns = _.range(0, n);
+  var board = new Board({'n': n});
+
+  //call function to mutate solutionCount
+  solutionCount = findSolutions(0, validColumns, board);
+
+  //definition of recursive function that will mutate solutionCount
+  function findSolutions(rowIndex, validCols, board) {
+    let solutions = 0;
+    if (rowIndex === n) {
+      if (board.hasAnyQueensConflicts()) {
+        console.log(board.rows());
+        return 0;
+      } else {
+        // board = new Board({'n': n});
+        let numPieces = _.reduce(board.rows(), function(memo, row) {
+          return memo + _.reduce(row, function(memo, col) {
+            return memo + col;
+          }, 0);
+        }, 0);
+        if (numPieces < n) {
+
+          return 0;
+        }
+        console.log(board.rows());
+        return 1;
+      }
+    } else
+    if (validCols.length === 0) {
+      // board = new Board({'n': n});
+      return 0;
+    } else {
+    for (let i = 0; i < validCols.length; i++) {
+      // board = new Board({'n': n});
+      if (validCols.length === n) {
+        board = new Board({n: n});
+      }
+      let colIndex = validCols[i];
+      board.togglePiece(rowIndex, colIndex);
+      let invalidIndex = validCols.indexOf(colIndex);
+      let newValidCols = validCols.slice();
+      newValidCols.splice(invalidIndex, 1); //mutates original array, deletes used up value
+      solutions += findSolutions(rowIndex + 1, newValidCols, board);
+
+    // });
+    }
+    }
+    // board = new Board({'n': n});
+
+    return solutions;
+  }
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
