@@ -95,10 +95,30 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  if (n === 0) {
+    return [];
+  }
+  let validColumns = _.range(0, n);
+  var solution = findSolution(0, validColumns, new Board({n:n}));
+
+  function findSolution(rowIndex, validCols, board) {
+    for (let i = 0; i < validCols.length; i++) {
+      let colIndex = validCols[i];
+      board.togglePiece(rowIndex, colIndex);
+      let invalidIndex = validCols.indexOf(colIndex);
+      let newValidCols = validCols.slice();
+      newValidCols.splice(invalidIndex, 1);
+      return findSolution(++rowIndex, newValidCols, board);
+    }
+    if (!board.hasAnyQueensConflicts()) {
+      return board;
+    } else {
+      return findSolution(++rowIndex, validCols, new Board({n: n}));
+    }
+  }
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
+  return solution.rows();
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
@@ -128,44 +148,33 @@ window.countNQueensSolutions = function(n) {
           }, 0);
         }, 0);
         if (numPieces < n) {
-
           return 0;
         }
         return 1;
       }
-    } else
-    if (validCols.length === 0) {
-      // board = new Board({'n': n});
+    } else if (validCols.length === 0) {
       return 0;
     } else {
-    for (let i = 0; i < validCols.length; i++) {
-      //reset board
-      //if there are valid columns present
-      if (validCols.length > 0) {
-        //for each cell in current row
-        let currentRow = board.get(rowIndex);
-        for (let i = 0; i < currentRow.length; i++) {
-          //if cell is 1
-          if (currentRow[i] === 1) {
-            //toggle
-            board.togglePiece(rowIndex, i);
+      for (let i = 0; i < validCols.length; i++) {
+
+        //reset board
+        if (validCols.length > 0) {
+          let currentRow = board.get(rowIndex);
+          for (let i = 0; i < currentRow.length; i++) {
+            if (currentRow[i] === 1) {
+              board.togglePiece(rowIndex, i);
+            }
           }
         }
+
+        //toggle pieces
+        let colIndex = validCols[i];
+        board.togglePiece(rowIndex, colIndex);
+        let invalidIndex = validCols.indexOf(colIndex);
+        let newValidCols = validCols.slice();
+        newValidCols.splice(invalidIndex, 1); //mutates original array, deletes used up value
+        solutions += findSolutions(rowIndex + 1, newValidCols, board);
       }
-      // for (let i = 0; i < validCols.length; i++) {
-      //   let colIndex = validCols[i];
-      //   if (board.get(rowIndex)[colIndex] === 1) {
-      //     board.togglePiece(rowIndex, i);
-      //   }
-      // }
-      //toggle pieces
-      let colIndex = validCols[i];
-      board.togglePiece(rowIndex, colIndex);
-      let invalidIndex = validCols.indexOf(colIndex);
-      let newValidCols = validCols.slice();
-      newValidCols.splice(invalidIndex, 1); //mutates original array, deletes used up value
-      solutions += findSolutions(rowIndex + 1, newValidCols, board);
-    }
     }
 
     return solutions;
