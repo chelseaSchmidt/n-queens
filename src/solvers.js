@@ -80,7 +80,7 @@ window.countNRooksSolutions = function(n) {
     if (validCols.length === 0) {
       return 0;
     }
-    validColumns.forEach(function(colIndex, i, collection) {
+    validCols.forEach(function(colIndex, i, collection) {
       board.togglePiece(rowIndex, colIndex);
       let invalidIndex = collection.indexOf(colIndex);
       validCols.splice(invalidIndex, 1); //mutates original array, deletes used up value
