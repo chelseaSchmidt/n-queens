@@ -70,22 +70,29 @@ window.countNRooksSolutions = function(n) {
   let board = new Board({'n': n});
 
   //call function to mutate solutionCount
-  findSolutions(0, validColumns);
+  solutionCount = findSolutions(0, validColumns);
 
   //definition of recursive function that will mutate solutionCount
   function findSolutions(rowIndex, validCols) {
+    let solutions = 0;
     if (rowIndex === n) {
       return 1;
-    }
+    } else
     if (validCols.length === 0) {
       return 0;
-    }
-    validCols.forEach(function(colIndex, i, collection) {
+    } else {
+    for (let i = 0; i < validCols.length; i++) {
+    // validCols.forEach(function(colIndex, i, collection) {
+      let colIndex = validCols[i];
       board.togglePiece(rowIndex, colIndex);
-      let invalidIndex = collection.indexOf(colIndex);
-      validCols.splice(invalidIndex, 1); //mutates original array, deletes used up value
-      solutionCount += findSolutions(rowIndex + 1, validCols);
-    });
+      let invalidIndex = validCols.indexOf(colIndex);
+      let newValidCols = validCols.slice();
+      newValidCols.splice(invalidIndex, 1); //mutates original array, deletes used up value
+      solutions += findSolutions(rowIndex + 1, newValidCols);
+    // });
+    }
+    }
+    return solutions;
   }
 
   //once recursive calls complete, return overall solutionCount
