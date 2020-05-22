@@ -99,10 +99,23 @@ window.findNQueensSolution = function(n) {
     return [];
   }
   let validColumns = _.range(0, n);
-  var solution = findSolution(0, validColumns, new Board({n:n}));
+  let firstRowPosition = 0;
+  var solution = findSolution(0, validColumns, new Board({n: n}));
 
-  function findSolution(rowIndex, validCols, board) {
-    for (let i = 0; i < validCols.length; i++) {
+  function findSolution(rowIndex, validCols, board, startCol = 0) {
+
+    for (let i = startCol; i < validCols.length; i++) {
+      //reset board
+      if (validCols.length > 0) {
+        let currentRow = board.get(rowIndex);
+        for (let i = 0; i < currentRow.length; i++) {
+          if (currentRow[i] === 1) {
+            board.togglePiece(rowIndex, i);
+          }
+        }
+      }
+
+      //toggle piece
       let colIndex = validCols[i];
       board.togglePiece(rowIndex, colIndex);
       let invalidIndex = validCols.indexOf(colIndex);
@@ -110,10 +123,12 @@ window.findNQueensSolution = function(n) {
       newValidCols.splice(invalidIndex, 1);
       return findSolution(++rowIndex, newValidCols, board);
     }
+    //check finished board
     if (!board.hasAnyQueensConflicts()) {
       return board;
     } else {
-      return findSolution(++rowIndex, validCols, new Board({n: n}));
+      firstRowPosition++;
+      return findSolution(0, validCols, new Board({n: n}, firstRowPosition));
     }
   }
 
@@ -141,7 +156,6 @@ window.countNQueensSolutions = function(n) {
       if (board.hasAnyQueensConflicts()) {
         return 0;
       } else {
-        // board = new Board({'n': n});
         let numPieces = _.reduce(board.rows(), function(memo, row) {
           return memo + _.reduce(row, function(memo, col) {
             return memo + col;
@@ -155,6 +169,7 @@ window.countNQueensSolutions = function(n) {
     } else if (validCols.length === 0) {
       return 0;
     } else {
+
       for (let i = 0; i < validCols.length; i++) {
 
         //reset board
