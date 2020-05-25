@@ -98,39 +98,45 @@ window.findNQueensSolution = function(n) {
   if (n === 0) {
     return [];
   }
+  if (n === 1) {
+    return [[1]];
+  }
   let validColumns = _.range(0, n);
   let firstRowPosition = 0;
-  var solution = findSolution(0, validColumns, new Board({n: n}));
-
-  function findSolution(rowIndex, validCols, board, startCol = 0) {
-
-    for (let i = startCol; i < validCols.length; i++) {
-      //reset board
-      if (validCols.length > 0) {
-        let currentRow = board.get(rowIndex);
-        for (let i = 0; i < currentRow.length; i++) {
-          if (currentRow[i] === 1) {
-            board.togglePiece(rowIndex, i);
-          }
-        }
-      }
-
-      //toggle piece
-      let colIndex = validCols[i];
-      board.togglePiece(rowIndex, colIndex);
-      let invalidIndex = validCols.indexOf(colIndex);
-      let newValidCols = validCols.slice();
-      newValidCols.splice(invalidIndex, 1);
-      return findSolution(++rowIndex, newValidCols, board);
-    }
-    //check finished board
-    if (!board.hasAnyQueensConflicts()) {
-      return board;
-    } else {
-      firstRowPosition++;
-      return findSolution(0, validCols, new Board({n: n}, firstRowPosition));
+  let solutions = tryCombinations(new Board(), 0, validColumns);
+  let solution = new Board();
+  for (let board of solutions) {
+    if (board !== '') {
+      solution = board;
+      break;
     }
   }
+
+  function tryCombinations(board, rowIndex, validCols) {
+    //solutions array for this branch
+    let solutions = [];
+
+    //if valid columns are empty
+      //if row index is equal to n
+        //if board has no queen conflicts
+          //store this board
+          solutions.push(board);
+        //else
+          //store ''
+      //else
+        //store ''
+    //else
+      //for each valid column beginning at R0 C0
+        //reset board as needed from last failed permutation
+        //set a piece at current R:C
+        //get copy of valid columns and remove column just placed
+        //concat recurse on incremented row, new valid columns, and current board
+
+    //return solutions array
+    return solutions;
+  }
+
+
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution.rows();
