@@ -102,44 +102,59 @@ window.findNQueensSolution = function(n) {
     return [[1]];
   }
   let validColumns = _.range(0, n);
-  let firstRowPosition = 0;
-  let solutions = tryCombinations(new Board(), 0, validColumns);
-  let solution = new Board();
-  for (let board of solutions) {
-    if (board !== '') {
-      solution = board;
-      break;
-    }
+
+  let solutions = tryCombinations(new Board({n: n}), 0, validColumns);
+
+  solutions = solutions.map(solution => solution.rows());
+
+  let solution = solutions[0];
+
+  if (solutions.length === 0) {
+    solution = new Board({n: n}).rows();
   }
 
   function tryCombinations(board, rowIndex, validCols) {
-    //solutions array for this branch
     let solutions = [];
 
-    //if valid columns are empty
-      //if row index is equal to n
-        //if board has no queen conflicts
-          //store this board
+    if (validCols.length === 0) {
+      if (rowIndex === n) {
+        if (!board.hasAnyQueensConflicts()) {
           solutions.push(board);
-        //else
-          //store ''
-      //else
-        //store ''
-    //else
-      //for each valid column beginning at R0 C0
-        //reset board as needed from last failed permutation
-        //set a piece at current R:C
-        //get copy of valid columns and remove column just placed
-        //concat recurse on incremented row, new valid columns, and current board
+        }
+      }
+    } else {
+      if (solutions.length !== 1) {
+        for (let colIndex of validCols) {
+          if (solutions.length !== 1) {
 
+            //reset board as needed from last failed permutation
+            let currentRow = board.get(rowIndex);
+            for (let i = 0; i < currentRow.length; i++) {
+              if (currentRow[i] === 1) {
+                board.togglePiece(rowIndex, i);
+              }
+            }
+
+            //set a piece at current R:C
+            board.togglePiece(rowIndex, colIndex);
+
+            //get copy of valid columns and remove column just placed
+            let invalidIndex = validCols.indexOf(colIndex);
+            let newValidCols = validCols.slice();
+            newValidCols.splice(invalidIndex, 1);
+
+            //concat recurse on incremented row, new valid columns, and current board
+            solutions = solutions.concat(tryCombinations(board, rowIndex + 1, newValidCols));
+          }
+        }
+      }
+    }
     //return solutions array
     return solutions;
   }
 
-
-
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution.rows();
+  return solution;
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
